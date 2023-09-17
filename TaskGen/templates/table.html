@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Table</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
+</head>
+<body>
+    <h1>Task Table</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Task</th>
+                <th>Task Description</th>
+                <th>Deadline</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>task.name</td>
+                <td>task.position</td>
+                <td>task.task</td>
+                <td>task.task_description</td>
+                <td>task.deadline</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

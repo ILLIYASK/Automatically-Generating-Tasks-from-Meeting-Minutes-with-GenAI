@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Pdf</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
+
+</head>
+<body>
+
+<div class="container">
+    <h1 class="heading">Upload a Pdf File</h1>
+    <p class='instruction'>Please choose a PDF file that contains the Minutes of Meeting (MoM) for upload<p/>
+
+        <form method ='post' enctype ="multipart/form-data">
+            {% csrf_token %}
+            {{form}}
+            <input type="submit" value = "Submit">
+        </form>
+
+</div>
+
+
+
+</body>
+</html>
