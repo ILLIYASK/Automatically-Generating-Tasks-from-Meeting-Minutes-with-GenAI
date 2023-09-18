@@ -7,7 +7,12 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/table.css' %}">
 </head>
 <body>
-    <h1>Task Table</h1>
+    <div class='heading'>
+
+        <h1>Task Table</h1>
+        
+    <div/>
+
     <table>
         <thead>
             <tr>
@@ -17,17 +22,24 @@
                 <th>Task Description</th>
                 <th>Deadline</th>
             </tr>
-        </thead>
+        </theadv>
         <tbody>
-
-            <tr>
-                <td>task.name</td>
-                <td>task.position</td>
-                <td>task.task</td>
-                <td>task.task_description</td>
-                <td>task.deadline</td>
-            </tr>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.position }}</td>
+                    <td>{{ task.task }}</td>
+                    <td>{{ task.task_description }}</td>
+                    <td>{{ task.deadline }}</td>
+                    <td>
+                        <a href="{% url 'edit_task' task.id %}" class="edit">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
+
+    <button class="create-btn"><a href="{% url 'download_excel' %}">Download Excel</a>
+    </button>
 </body>
 </html>
