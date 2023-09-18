@@ -21,3 +21,15 @@ class Task(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CreateMoM(models.Model):
+    title = models.CharField(max_length=100)
+    date = models.CharField(max_length=20)
+    location = models.CharField(max_length=100)
+    attendees = models.TextField()
+    agenda = models.TextField()
+    discussion = models.TextField()
+
+    def __str__(self):
+        return self.title

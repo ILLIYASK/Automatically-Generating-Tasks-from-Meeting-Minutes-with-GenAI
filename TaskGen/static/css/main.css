@@ -1,9 +1,7 @@
 .container{
-    background-color: #252b2d;
+    background-color: #fafafa;
     height: 100%;
     padding: 4rem;
-    align-content: center;
-    align-items: center;
     text-align: center;
 }
 
@@ -11,38 +9,42 @@
 
     font-size: 4rem;
     margin-bottom: 0%;
-    color: white;
+    color: #340864;
 }
 
 .description{
-    padding-left: 10%;
-    padding-right: 10%;
-    color: rgb(189, 160, 16);
+    background-color: #c5d5da91;
+    height: 100%;
+    padding: 4rem;
+    text-align: center;
 }
 
-html,body{
-
+html, body {
     margin: 0%;
     height: 100%;
     overflow: auto;
+    background-color: #c5d5da91;
+
 }
 
 .upload-btn{
-    background-color: rgb(12, 231, 198);
-    width: 6rem;
-    height: 2rem;
-    border-radius:10px;
+    background-color: rgb(71 0 118 / 87%);
+    width: 9rem;
+    height: 3rem;
+    border-radius: 10px;
     border: none;
     color: white;
+    cursor: pointer;
  
 }
 .create-btn{
-    background-color: rgb(3, 51, 182);
-    width: 6rem;
-    height: 2rem;
-    border-radius:10px;
+    background-color: rgb(55 78 44);
+    width: 8rem;
+    height: 3rem;
+    border-radius: 10px;
     border: none;
     color: white;
+    cursor: pointer;
 }
 .link{
     text-decoration: none;

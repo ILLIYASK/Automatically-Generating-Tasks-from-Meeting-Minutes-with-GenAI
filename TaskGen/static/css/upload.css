@@ -1,71 +1,82 @@
-.container{
-    background-color: #252b2d;
-    height: 100%;
-    padding: 4rem;
-    align-content: center;
-    align-items: center;
+/* upload.css */
+
+/* Reset default margin and padding */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Style the background and font */
+body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+}
+
+/* Style the container */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
-.heading{
-
-    font-size: 4rem;
-    margin-bottom: 0%;
-    color: white;
+/* Style the heading */
+.heading {
+    font-size: 24px;
+    color: #333;
+    margin-top: 0;
 }
 
-.description{
-    padding-left: 10%;
-    padding-right: 2%;
-    color: rgb(189, 160, 16);
-    padding-top: 10%;
-    font-size: 1.3rem;
+/* Style the instruction text */
+.instruction {
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 20px;
 }
 
-html,body{
-
-    margin: 0%;
-    height: 100%;
-    overflow: auto;
-}
-
-.generate-btn{
-    background-color: rgb(12, 231, 198);
-    width: 10rem;
-    height: 3rem;
-    border-radius:10px;
-    border: none;
-    color: white;
-    font-size: 1.1rem;
- 
-}
-.back-btn{
-    background-color: rgb(3, 51, 182);
-    width: 6rem;
-    height: 3rem;
-    border-radius:10px;
-    border: none;
-    color: white;
-    font-size: 1.1rem;
-}
-.link{
-    text-decoration: none;
-    color: white;
-
-}
-
-.form{
+/* Style the form */
+form {
     text-align: center;
 }
 
-.input{
-    color: red;
-    font-size: 1.1rem;
-    padding-bottom: 2rem;
+/* Style the form fields and submit button */
+form input[type="file"] {
+    display: none; /* Hide the file input element */
 }
 
-.instruction{
-    color:rgb(229, 235, 229);
-    padding-bottom: 2%;
+.form-group {
+    margin-bottom: 15px;
+}
 
+.form-group label {
+    font-weight: bold;
+    display: block;
+}
+
+.form-group input[type="file"] + label {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Style the submit button */
+form input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Style the submit button on hover */
+form input[type="submit"]:hover {
+    background-color: #0056b3;
 }

@@ -22,7 +22,7 @@
                 <th>Task Description</th>
                 <th>Deadline</th>
             </tr>
-        </theadv>
+        </thead>
         <tbody>
             {% for task in tasks %}
                 <tr>
@@ -32,7 +32,7 @@
                     <td>{{ task.task_description }}</td>
                     <td>{{ task.deadline }}</td>
                     <td>
-                        <a href="{% url 'edit_task' task.id %}" class="edit">Edit</a>
+                        <a href="{% url 'edit_task' task.id %}">Edit</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -41,5 +41,9 @@
 
     <button class="create-btn"><a href="{% url 'download_excel' %}">Download Excel</a>
     </button>
+    <button class="regenerate"><a href="{% url 'regenerate_tasks' %}" >Regenerate Tasks</a></button>
+    <button class="add_task"><a href="{% url 'add_task' %}">Add Row</a></button>
+
+
 </body>
 </html>

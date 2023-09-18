@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from  django.http import  HttpResponse
-from django.core.files.storage import FileSystemStorage  # Required for file handling
-from .form import UploadMoM,TaskEditForm
-from .models import Task
+from django.core.files.storage import FileSystemStorage  
+from .form import UploadMoM,TaskEditForm,MoMForm,AddTaskForm
+from .models import Task,CreateMoM,MoM
 import PyPDF2
 import openai
 import os
@@ -17,6 +17,10 @@ import re
 os.environ["OPENAI_API_KEY"] = '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'
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
+# global variables
+pdf_file = None
 
 # read text from pdf
 
@@ -150,6 +154,13 @@ def create_table(reply):
 
 
 def main(request):
+
+    CreateMoM.objects.all().delete()
+    # Delete all existing tasks from the Task model
+    Task.objects.all().delete()
+
+    MoM.objects.all().delete()
+
     return render(request,'main.html')
 
 def table(request):
@@ -162,6 +173,10 @@ def table(request):
 
 
 def upload(request):
+
+    global pdf_file
+
+
     if request.method == 'POST':
         form = UploadMoM(request.POST,request.FILES)
         if form.is_valid():
@@ -171,10 +186,11 @@ def upload(request):
             text = extract_text_from_pdf(file_path)
             tokens = number_of_tokens(text)
 
-            if tokens <2000:
+            if tokens <3200:
 
                 reply = reply_generation(text)
                 table = create_table(reply)
+
 
                 for row_idx in range(len([*table.values()][0])):
 
@@ -234,3 +250,103 @@ def download_excel(request):
     df.to_excel(response, index=False)
 
     return response
+
+
+
+def regenerate_tasks(request):
+
+    # Delete all existing tasks from the Task model
+    Task.objects.all().delete()
+
+    # Generate new tasks (customize this logic based on your requirements)
+    file_path = os.path.join('media', 'pdfs', str(pdf_file))
+    text = extract_text_from_pdf(file_path)
+    tokens = number_of_tokens(text)
+
+    if tokens <3500:
+
+        reply = reply_generation(text)
+        table = create_table(reply)
+
+        for row_idx in range(len([*table.values()][0])):
+
+            task = Task(
+
+            name=table[[*table.keys()][0]][row_idx],
+            position=table[[*table.keys()][1]][row_idx],
+            task=table[[*table.keys()][2]][row_idx],
+            task_description=table[[*table.keys()][3]][row_idx],
+            deadline=table[[*table.keys()][4]][row_idx]
+
+
+            )
+
+            task.save()
+    
+
+    tasks = Task.objects.all()
+    return render(request, 'table.html', {'tasks': tasks})
+
+
+
+
+def create_mom(request):
+    if request.method == 'POST':
+        form = MoMForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+            # Retrieve the first MoM record
+            first_mom = CreateMoM.objects.first()
+
+            text = f'title:\n{first_mom.title}\ndate:{first_mom.date}\nlocation:\n{first_mom.location}\nattendees:\n{first_mom.attendees}\nagenda:\n{first_mom.agenda}\ndiscussion:\n{first_mom.discussion}'
+            tokens = number_of_tokens(text)
+
+            if tokens <3500:
+
+                reply = reply_generation(text)
+                table = create_table(reply)
+
+                for row_idx in range(len([*table.values()][0])):
+
+                    task = Task(
+
+                    name=table[[*table.keys()][0]][row_idx],
+                    position=table[[*table.keys()][1]][row_idx],
+                    task=table[[*table.keys()][2]][row_idx],
+                    task_description=table[[*table.keys()][3]][row_idx],
+                    deadline=table[[*table.keys()][4]][row_idx]
+
+
+                    )
+
+                    task.save()
+            
+
+            tasks = Task.objects.all()
+            return render(request, 'table.html', {'tasks': tasks})
+            
+
+
+            return redirect('mom_list')  # Redirect to a list view or another page
+    else:
+        form = MoMForm()
+    
+    context = {'form': form}
+    return render(request, 'create_MoM.html', context)
+
+
+
+def add_task(request):
+    if request.method == 'POST':
+        form = AddTaskForm(request.POST)
+        if form.is_valid():
+            # Save the new Task instance to the database
+            form.save()
+            tasks = Task.objects.all()
+            return render(request, 'table.html', {'tasks': tasks})  # Redirect to your table page after adding
+    else:
+        form = AddTaskForm()
+
+    context = {'form': form}
+    return render(request, 'add_task_form.html', context)
