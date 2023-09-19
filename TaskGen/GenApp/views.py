@@ -2,13 +2,15 @@ from django.shortcuts import render,redirect,get_object_or_404
 from  django.http import  HttpResponse
 from django.core.files.storage import FileSystemStorage  
 from .form import UploadMoM,TaskEditForm,MoMForm,AddTaskForm
-from .models import Task,CreateMoM,MoM
+from .models import Task,CreateMoM,MomFile
 import PyPDF2
 import openai
 import os
 import tiktoken
 import pandas as pd
 import re
+import docx
+
 
 
 
@@ -22,7 +24,6 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 # global variables
-pdf_file = None
 text = ""
 
 # read text from pdf
@@ -162,7 +163,7 @@ def main(request):
     # Delete all existing tasks from the Task model
     Task.objects.all().delete()
 
-    MoM.objects.all().delete()
+    MomFile.objects.all().delete()
 
     return render(request,'main.html')
 
@@ -175,51 +176,7 @@ def table(request):
 
 
 
-def upload(request):
 
-    global pdf_file
-    global text
-
-
-    if request.method == 'POST':
-        form = UploadMoM(request.POST,request.FILES)
-        if form.is_valid():
-            pdf_file = form.cleaned_data['pdf']
-            form.save()
-            file_path = os.path.join('media', 'pdfs', str(pdf_file))
-            text = extract_text_from_pdf(file_path)
-            tokens = number_of_tokens(text)
-
-            if tokens <3200:
-
-                reply = reply_generation(text)
-                table = create_table(reply)
-
-
-                for row_idx in range(len([*table.values()][0])):
-
-                    task = Task(
-
-                    name=table[[*table.keys()][0]][row_idx],
-                    position=table[[*table.keys()][1]][row_idx],
-                    task=table[[*table.keys()][2]][row_idx],
-                    task_description=table[[*table.keys()][3]][row_idx],
-                    deadline=table[[*table.keys()][4]][row_idx]
-
-
-                    )
-
-                    task.save()
-            
-
-            tasks = Task.objects.all()
-            return render(request, 'table.html', {'tasks': tasks})
-    else:
-        form = UploadMoM()
-        context = {
-            'form':form,
-        }
-    return render(request, 'upload.html', context)
 
 
 def edit_task(request, task_id):
@@ -264,8 +221,6 @@ def regenerate_tasks(request):
     # Delete all existing tasks from the Task model
     Task.objects.all().delete()
 
-    # Generate new tasks (customize this logic based on your requirements)
-    file_path = os.path.join('media', 'pdfs', str(pdf_file))
     tokens = number_of_tokens(text)
 
     if tokens <3500:
@@ -366,3 +321,93 @@ def delete_task(request, task_id):
     task.delete()
     tasks = Task.objects.all()
     return render(request, 'table.html', {'tasks': tasks})
+
+
+def extract_text_from_docx(file_path):
+
+    doc = docx.Document(file_path)
+
+    text = ""
+
+    for paragraph in doc.paragraphs:
+        text += paragraph.text + '\n'
+
+    return text
+
+def upload_file(request):
+
+    global text
+
+
+    if request.method == 'POST':
+        form = UploadMoM(request.POST, request.FILES)
+        if form.is_valid():
+            
+            form.save()
+            file = form.cleaned_data['file']
+            print(file)
+            ext = f'{str(file)}'.split('.')[1]
+
+            file_path = os.path.join('media', 'files', str(file))
+
+            if ext == 'pdf':
+                text = extract_text_from_pdf(file_path)
+
+            elif ext == 'txt':
+
+                with open(file_path, 'r') as txt:
+
+                    text = txt.read()
+            
+            elif ext == 'docx':
+
+                text = extract_text_from_docx(file_path)
+            
+            else :
+
+                form = UploadMoM()
+                context = {
+                    'form':form,
+                   }
+                return render(request, 'upload.html', context)
+
+            tokens = number_of_tokens(text)
+            
+            if tokens <3200:
+
+                reply = reply_generation(text)
+                table = create_table(reply)
+
+
+                for row_idx in range(len([*table.values()][0])):
+
+                    task = Task(
+
+                    name=table[[*table.keys()][0]][row_idx],
+                    position=table[[*table.keys()][1]][row_idx],
+                    task=table[[*table.keys()][2]][row_idx],
+                    task_description=table[[*table.keys()][3]][row_idx],
+                    deadline=table[[*table.keys()][4]][row_idx]
+
+
+                    )
+
+                    task.save()
+            
+
+                tasks = Task.objects.all()
+                return render(request, 'table.html', {'tasks': tasks})
+
+            else :
+
+                form = UploadMoM()
+                context = {
+                    'form':form,
+                   }
+                return render(request, 'upload.html', context)
+    else:
+        form = UploadMoM()
+        context = {
+                    'form':form,
+                   }
+    return render(request, 'upload.html', context)

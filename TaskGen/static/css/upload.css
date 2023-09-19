@@ -32,7 +32,7 @@ body {
 
 /* Style the instruction text */
 .instruction {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color:black;
     margin-bottom: 20px;
 }
@@ -101,4 +101,10 @@ form input[type="submit"]:hover {
     font-size: 1.2rem;
     color: #fff;
     cursor: pointer;
+}
+
+.file{
+    color: blue;
+    font-weight: bold;
+    font-size: 1rem;
 }

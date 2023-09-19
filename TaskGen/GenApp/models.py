@@ -1,10 +1,10 @@
 from django.db import models
 
 # Create your models here.
-class MoM(models.Model):
+class MomFile(models.Model):
  
     title = models.CharField(max_length = 80)
-    pdf = models.FileField(upload_to='pdfs/')
+    file = models.FileField(upload_to='files/')
  
     class Meta:
         ordering = ['title']

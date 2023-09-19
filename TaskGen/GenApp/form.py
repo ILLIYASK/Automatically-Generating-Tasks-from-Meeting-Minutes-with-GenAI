@@ -1,11 +1,11 @@
 
 from django import forms
-from .models import MoM,Task,CreateMoM
+from .models import MomFile,Task,CreateMoM
 
 class UploadMoM(forms.ModelForm):
     class Meta:
-        model = MoM
-        fields = ('title', 'pdf',)
+        model = MomFile
+        fields = ('title', 'file',)
 
 class TaskEditForm(forms.ModelForm):
     class Meta:
