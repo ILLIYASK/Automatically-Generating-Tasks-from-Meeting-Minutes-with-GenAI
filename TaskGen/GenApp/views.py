@@ -14,13 +14,16 @@ import re
 
 # setup openAi
 
-os.environ["OPENAI_API_KEY"] = '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'
+key = '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'
+
+os.environ["OPENAI_API_KEY"] = key
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 # global variables
 pdf_file = None
+text = ""
 
 # read text from pdf
 
@@ -175,6 +178,7 @@ def table(request):
 def upload(request):
 
     global pdf_file
+    global text
 
 
     if request.method == 'POST':
@@ -255,12 +259,13 @@ def download_excel(request):
 
 def regenerate_tasks(request):
 
+    global text
+
     # Delete all existing tasks from the Task model
     Task.objects.all().delete()
 
     # Generate new tasks (customize this logic based on your requirements)
     file_path = os.path.join('media', 'pdfs', str(pdf_file))
-    text = extract_text_from_pdf(file_path)
     tokens = number_of_tokens(text)
 
     if tokens <3500:
@@ -291,6 +296,9 @@ def regenerate_tasks(request):
 
 
 def create_mom(request):
+
+    global text
+
     if request.method == 'POST':
         form = MoMForm(request.POST)
         if form.is_valid():
@@ -350,3 +358,11 @@ def add_task(request):
 
     context = {'form': form}
     return render(request, 'add_task_form.html', context)
+
+
+
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    task.delete()
+    tasks = Task.objects.all()
+    return render(request, 'table.html', {'tasks': tasks})

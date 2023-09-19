@@ -12,6 +12,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
+        <button class="back"><a class='link' href="{% url 'table_page' %}">Back</a></button>
         <input type="submit" value="Add Task">
     </form>
 </body>

@@ -12,12 +12,23 @@
 <div class="container">
     <h1 class="heading">Upload a Pdf File</h1>
     <p class='instruction'>Please choose a PDF file that contains the Minutes of Meeting (MoM) for upload<p/>
-
+    <div class='formdiv'>
         <form method ='post' enctype ="multipart/form-data">
             {% csrf_token %}
             {{form}}
+
+            <br/>
+            <br/>
+
             <input type="submit" value = "Submit">
+
         </form>
+        <br/>
+
+
+        <button class="back"><a class='link' href="{% url 'main_page' %}">Back</a></button>
+
+    </div>
 
 </div>
 
