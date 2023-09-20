@@ -16,7 +16,7 @@ import docx
 
 # setup openAi
 
-key = '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'
+key = ''
 
 os.environ["OPENAI_API_KEY"] = key
 
